@@ -14,12 +14,12 @@ const TestForm = ({ onSubmit, showResult, setShowResult, myMBTI }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // if (answers.includes(null)) {
-    //   alert("모든 항목을 체크해주세요.");
-    // } else {
-    onSubmit(answers);
-    setShowResult(true);
-    // }
+    if (answers.includes(null)) {
+      alert("모든 항목을 체크해주세요.");
+    } else {
+      onSubmit(answers);
+      setShowResult(true);
+    }
   };
 
   return !showResult ? (

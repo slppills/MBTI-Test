@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { getUserProfile, updateProfile } from "../api/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import useUserStore from "../zustand/userStore";
 import { Navigate } from "react-router-dom";
 
 const Profile = () => {
   const [nickname, setNickname] = useState("");
   const token = localStorage.getItem("accessToken");
   const queryClient = useQueryClient();
-  const { setUserNickname } = useUserStore();
 
   const { data, isPending, isError } = useQuery({
     queryKey: ["userData"],
@@ -27,7 +25,6 @@ const Profile = () => {
   useEffect(() => {
     if (data) {
       setNickname(data);
-      setUserNickname(data);
     }
   }, [data]);
 
