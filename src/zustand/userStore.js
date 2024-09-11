@@ -4,11 +4,13 @@ import { persist } from "zustand/middleware";
 const useUserStore = create(
   persist(
     (set) => ({
-      isLogin: false,
-      setIsLogin: (loginStatus) => set(() => ({ isLogin: loginStatus })),
+      userId: "",
+      userNickname: "",
+      setUserId: (newUserId) => set(() => ({ userId: newUserId })),
+      setUserNickname: (newUserNickname) => set(() => ({ userNickname: newUserNickname })),
     }),
     {
-      name: "isLogin",
+      name: "userInfo-store",
     }
   )
 );
