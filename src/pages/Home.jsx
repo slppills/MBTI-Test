@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const TextBox = ({ title, content }) => {
   return (
@@ -10,6 +11,8 @@ const TextBox = ({ title, content }) => {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <h1 className="text-[2.5rem] font-bold">무료 성격 테스트</h1>
@@ -25,7 +28,10 @@ const Home = () => {
           content="팀 내에서 자신과 동료들의 성격을 이해하고 협력할 수 있는 방법을 배워보세요."
         />
       </div>
-      <button className="mt-[4rem] bg-red-400 hover:bg-red-500 transition text-white py-[15px] px-[25px] rounded-[24px]">
+      <button
+        className="mt-[4rem] bg-red-400 hover:bg-red-500 transition text-white py-[15px] px-[25px] rounded-[24px]"
+        onClick={() => navigate("/test")}
+      >
         내 성격 알아보러 가기
       </button>
     </>

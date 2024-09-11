@@ -1,42 +1,56 @@
 import { useEffect, useState } from "react";
 import { getUserProfile, updateProfile } from "../api/auth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import useUserStore from "../zustand/userStore";
+import { Navigate } from "react-router-dom";
 
 const Profile = () => {
   const [nickname, setNickname] = useState("");
-  const [updateNickname, setUpdateNickname] = useState(false);
+  const token = localStorage.getItem("accessToken");
+  const queryClient = useQueryClient();
+  const { setUserNickname } = useUserStore();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem("accessToken");
-      const newNickname = await updateProfile({ nickname }, token);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["userData"],
+    queryFn: () => getUserProfile(token),
+    retry: false,
+  });
+
+  const mutation = useMutation({
+    mutationFn: () => updateProfile({ nickname }, token),
+    onSuccess: () => {
       alert("닉네임 변경이 완료되었습니다.");
-      setNickname(newNickname);
-      setUpdateNickname(!updateNickname);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      queryClient.invalidateQueries(["userData"]);
+    },
+  });
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        const name = await getUserProfile(token);
-        setNickname(name);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    if (data) {
+      setNickname(data);
+      setUserNickname(data);
+    }
+  }, [data]);
 
-    fetchUserProfile();
-  }, [updateNickname]);
+  if (isPending) {
+    return <div>로딩중...</div>;
+  }
+  if (isError) {
+    alert("토큰이 만료되었습니다. 다시 로그인 해주세요");
+    localStorage.removeItem("accessToken");
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className="bg-white p-[30px] rounded-[8px]">
       <h1 className="text-[1.5rem] font-semibold">프로필 수정</h1>
 
-      <form onSubmit={handleSubmit} className="w-[400px] flex flex-col">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mutation.mutate();
+        }}
+        className="w-[400px] flex flex-col"
+      >
         <label className="mt-[30px]">닉네임</label>
         <input
           type="text"
