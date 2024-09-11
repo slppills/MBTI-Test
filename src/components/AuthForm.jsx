@@ -4,7 +4,7 @@ import { login, register } from "../api/auth";
 import useUserStore from "../zustand/userStore";
 
 const AuthForm = () => {
-  const { setIsLogin } = useUserStore();
+  const { setUserId, setUserNickname } = useUserStore();
   const location = useLocation();
   const isLoginpage = location.pathname === "/login";
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ const AuthForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
-      !isLoginpage ? register(formData, navigate) : login(formData, navigate, setIsLogin);
+      !isLoginpage ? register(formData, navigate) : login(formData, navigate, setUserId, setUserNickname);
     } catch (error) {
       console.log(error);
     }
