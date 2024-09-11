@@ -20,7 +20,7 @@ const Router = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/test" element={<TestPage />} />
-            <Route path="/test-result" element={<TestResultPage />} />
+            <Route path="/results" element={<TestResultPage />} />
           </Route>
         </Routes>
       </Layout>
